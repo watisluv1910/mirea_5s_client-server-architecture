@@ -15,6 +15,7 @@ public class ClientHandler implements Runnable {
 
     private final Socket clientSocket;
     private final PrintWriter out;
+
     static final List<ClientHandler> clientHandlers = new ArrayList<>();
 
     public ClientHandler(Socket clientSocket) throws IOException {
@@ -27,13 +28,13 @@ public class ClientHandler implements Runnable {
     public void run() {
         try {
             Scanner scanner = new Scanner(clientSocket.getInputStream());
-
+            scanner.useDelimiter("\r\n");
+            logger.info("Client socket connected: {}", clientSocket.isConnected());
             while (scanner.hasNextLine()) {
                 String message = scanner.nextLine();
                 logger.info("Received message from client: " + message);
                 Server.addLatestMessage(message);
             }
-
         } catch (IOException e) {
             logger.error("Error in ClientHandler run method", e);
         } finally {

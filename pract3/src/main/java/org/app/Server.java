@@ -1,6 +1,5 @@
 package org.app;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +12,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static org.app.ClientHandler.clientHandlers;
+
 public class Server {
 
     private static final Logger logger = LoggerFactory.getLogger(Server.class);
@@ -24,12 +25,13 @@ public class Server {
     private static final ExecutorService executorService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
     private static final ArrayList<String> messages = new ArrayList<>();
 
-    private static volatile boolean serverRunning = true;
+    private static volatile boolean serverRunning = false;
 
     public static void main(String[] args) {
         try {
             ServerSocket serverSocket = new ServerSocket(PORT);
             logger.info("Server is running on port {}", PORT);
+            serverRunning = true;
 
             // Thread for broadcasting messages at regular intervals
             ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
@@ -60,7 +62,7 @@ public class Server {
             for (String message: messages) {
                 logger.info("Broadcasting message: {}", message);
                 executorService.execute(() -> {
-                    for (ClientHandler clientHandler : ClientHandler.clientHandlers) {
+                    for (ClientHandler clientHandler : clientHandlers) {
                         clientHandler.sendMessage(message);
                     }
                 });
