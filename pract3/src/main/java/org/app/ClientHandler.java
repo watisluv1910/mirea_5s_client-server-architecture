@@ -28,7 +28,6 @@ public class ClientHandler implements Runnable {
     public void run() {
         try {
             Scanner scanner = new Scanner(clientSocket.getInputStream());
-            scanner.useDelimiter("\r\n");
             logger.info("Client socket connected: {}", clientSocket.isConnected());
             while (scanner.hasNextLine()) {
                 String message = scanner.nextLine();

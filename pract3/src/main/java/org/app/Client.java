@@ -16,8 +16,8 @@ public class Client {
     private static final int SERVER_PORT = 12345;
 
     public static void main(String[] args) {
-        try (Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT)) {
-
+        try {
+            Socket socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
             logger.info("Connected to server {}:{}", SERVER_ADDRESS, SERVER_PORT);
 
             Scanner scanner = new Scanner(System.in);
